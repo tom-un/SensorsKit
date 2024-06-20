@@ -78,7 +78,11 @@ public class Sensors: NSObject
 
         let completion  = self.completion
         self.completion = nil
-        self.data       = []
+
+        DispatchQueue.main.async
+        {
+            self.data = []
+        }
 
         completion?()
     }

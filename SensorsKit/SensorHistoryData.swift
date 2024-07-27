@@ -34,12 +34,14 @@ public class SensorHistoryData: NSObject, Synchronizable
         case voltage
         case current
         case ambiantLight
+        case rpm
 
         public var description: String
         {
             switch self
             {
                 case .thermal:      return "thermal"
+                case .rpm:          return "rpm"
                 case .voltage:      return "voltage"
                 case .current:      return "current"
                 case .ambiantLight: return "ambiantLight"

@@ -35,10 +35,13 @@ public class Sensors: NSObject
 
     private var shouldRun = true
     private var completion: ( () -> Void )?
+    private var regexFanRPM: NSRegularExpression
 
     @objc
     public override init()
     {
+        self.regexFanRPM = try! NSRegularExpression( pattern: "F[0-9]Ac" )
+
         super.init()
 
         DispatchQueue.global( qos: .background ).async
@@ -114,6 +117,7 @@ public class Sensors: NSObject
         let all = SMC.shared.readAllKeys()
 
         all.filter { $0.keyName.hasPrefix( "T" ) }.forEach { self.addSensorHistoryData( data: $0, kind: .thermal ) }
+        all.filter { self.regexFanRPM.firstMatch(in: $0.keyName, range: NSMakeRange(0, $0.keyName.count)) != nil }.forEach { self.addSensorHistoryData( data: $0, kind: .rpm ) }
         all.filter { $0.keyName.hasPrefix( "V" ) }.forEach { self.addSensorHistoryData( data: $0, kind: .voltage ) }
         all.filter { $0.keyName.hasPrefix( "I" ) }.forEach { self.addSensorHistoryData( data: $0, kind: .current ) }
     }
